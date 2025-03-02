@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Love Letter Vault</title>
+    <style>
+        body { text-align: center; font-family: Arial, sans-serif; }
+        textarea { width: 80%; height: 200px; }
+        button { padding: 10px 20px; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <h1>💌 Love Letter Vault</h1>
+    <textarea id="letter" placeholder="Write your love letter here..."></textarea><br>
+    <button onclick="saveLetter()">Save Letter</button>
+
+    <script>
+        async function saveLetter() {
+            const letter = document.getElementById('letter').value;
+            const sender = prompt("Enter your name:");
+    
+            if (!letter.trim()) {
+                alert("Please write a letter before saving.");
+                return;
+            }
+    
+            const newLetter = {
+                text: letter,
+                sender: sender || "Anonymous",
+                timestamp: new Date()
+            };
+    
+            try {
+                // Send letter to JSON Server (local API)
+                const response = await fetch("http://localhost:3000/letters", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(newLetter)
+                });
+    
+                if (response.ok) {
+                    alert("Letter saved to the vault!");
+                    document.getElementById('letter').value = "";
+                } else {
+                    alert("Error saving letter");
+                }
+            } catch (error) {
+                console.error("Error:", error);
+            }
+        }
+    </script>
+    
+
+</body>
+</html>
